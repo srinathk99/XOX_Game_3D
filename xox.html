@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+        <title>Babylon.js sample code</title>
+
+        <!-- Babylon.js -->
+        <script src="https://code.jquery.com/pep/0.4.2/pep.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.6.2/dat.gui.min.js"></script>
+        <script src="https://preview.babylonjs.com/ammo.js"></script>
+        <script src="https://preview.babylonjs.com/cannon.js"></script>
+        <script src="https://preview.babylonjs.com/Oimo.js"></script>
+        <script src="https://preview.babylonjs.com/libktx.js"></script>
+        <script src="https://preview.babylonjs.com/earcut.min.js"></script>
+        <script src="https://preview.babylonjs.com/babylon.js"></script>
+        <script src="https://preview.babylonjs.com/inspector/babylon.inspector.bundle.js"></script>
+        <script src="https://preview.babylonjs.com/materialsLibrary/babylonjs.materials.min.js"></script>
+        <script src="https://preview.babylonjs.com/proceduralTexturesLibrary/babylonjs.proceduralTextures.min.js"></script>
+        <script src="https://preview.babylonjs.com/postProcessesLibrary/babylonjs.postProcess.min.js"></script>
+        <script src="https://preview.babylonjs.com/loaders/babylonjs.loaders.js"></script>
+        <script src="https://preview.babylonjs.com/serializers/babylonjs.serializers.min.js"></script>
+        <script src="https://preview.babylonjs.com/gui/babylon.gui.min.js"></script>
+
+        <style>
+            html, body {
+                overflow: hidden;
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+
+            #renderCanvas {
+                width: 100%;
+                height: 100%;
+                touch-action: none;
+            }
+        </style>
+    </head>
+<body>
+    <canvas id="renderCanvas"></canvas>
+    <script>
+        var canvas = document.getElementById("renderCanvas");
+
+        var engine = null;
+        var scene = null;
+        var createDefaultEngine = function() { return new BABYLON.Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true }); };
+        
+       
+var createScene = function () {
+    var scene = new BABYLON.Scene(engine);
+    var camera = new BABYLON.ArcRotateCamera("cam", -Math.PI / 2, Math.PI / 2, 10, BABYLON.Vector3.Zero());
+    var anchor = new BABYLON.TransformNode("");
+    camera.wheelDeltaPercentage = 0.01;
+    camera.attachControl(canvas, true);
+
+    var advanceTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
+    
+
+     //title
+    var titles = new BABYLON.GUI.TextBlock();
+    titles.text="XOX";
+    titles.fontSize=34;
+    titles.color="white";
+    // titles.fontStyle="bold";
+    titles.top="-240px";
+    advanceTexture.addControl(titles);
+
+    // Create the 3D UI manager
+   var manager = new BABYLON.GUI.GUI3DManager(scene);
+   var panel = new BABYLON.GUI.PlanePanel();
+   panel.rows=3;
+   panel.columns=3;
+   panel.margin=0.1;
+   manager.addControl(panel);
+ 
+    //variables
+    var click=1;
+    var gameover=0;
+    var a1=9,a2=9,a3=9,a4=9,a5=9,a6=9,a7=9,a8=9,a9=9;
+
+    
+
+    //textfield function
+    var textfields=function(txt) {
+        var tf=new BABYLON.GUI.TextBlock();
+        tf.text=txt;
+        tf.color="Red";
+        tf.fontSize=50;
+        return tf;
+    }
+
+   
+    //but1
+   
+     var button1 = new BABYLON.GUI.HolographicButton("button1");
+    //  var tf1=new BABYLON.GUI.TextBlock();
+    // button1.text="1";
+     var click1=0;
+     button1.onPointerClickObservable.add(function(){
+         if(click1==0 && gameover==0)
+         {
+             if(click%2==1)
+             {
+                button1.content=textfields("X");
+                a1=1;
+             }
+             else
+             {
+                button1.content=textfields("O");
+                a1=0;
+             }
+             click++;
+         }
+          click1++;
+          check();
+
+     });
+     panel.addControl(button1);
+     //button1.addControl(button1);
+
+    //but2
+   
+     var button2 = new BABYLON.GUI.HolographicButton("button2");
+     //var button2=new BABYLON.GUI.TextBlock();
+    // button2.text="2";
+     var click2=0;
+     button2.onPointerClickObservable.add(function(){
+         if(click2==0 && gameover==0)
+         {
+            if(click%2==1)
+             {
+                button2.content=textfields("X");
+                a2=1;
+             }
+             else
+             {
+                button2.content=textfields("O");
+                a2=0;
+             }
+            click++;
+         }
+          click2++;
+          check();
+
+     });
+    
+    panel.addControl(button2);
+     //button2.addControl(button2);
+
+    //but3
+   
+     var button3 = new BABYLON.GUI.HolographicButton("button1");
+     //var button3=new BABYLON.GUI.TextBlock();
+    //  button3.text="3";
+     var click3=0;
+     button3.onPointerClickObservable.add(function(){
+         if(click3==0 && gameover==0)
+         {
+            if(click%2==1)
+             {
+                button3.content=textfields("X");
+                a3=1;
+             }
+             else
+             {
+                button3.content=textfields("O");
+                a3=0;
+             }
+             click++;
+         }
+          click3++;
+          check();
+
+     });
+    
+    panel.addControl(button3);
+    // button3.addControl(button3);
+
+    //but4
+     
+     var button4 = new BABYLON.GUI.HolographicButton("button1");
+     //var button4=new BABYLON.GUI.TextBlock();
+    //  button4.text="4";
+     var click4=0;
+     button4.onPointerClickObservable.add(function(){
+         if(click4==0 && gameover==0)
+         {
+            if(click%2==1)
+             {
+                button4.content=textfields("X");
+                a4=1;
+             }
+             else
+             {
+                button4.content=textfields("O");
+                a4=0;
+             }
+            click++;
+         }
+          click4++;
+          check();
+
+     });
+   
+     panel.addControl(button4);
+    // button4.addControl(button4);
+
+     //but5
+   
+     var button5 = new BABYLON.GUI.HolographicButton("button1");
+     //var button5=new BABYLON.GUI.TextBlock();
+    //  button5.text="5";
+     var click5=0;
+     button5.onPointerClickObservable.add(function(){
+         if(click5==0 && gameover==0)
+         {
+            if(click%2==1)
+             {
+                button5.content=textfields("X");
+                a5=1;
+             }
+             else
+             {
+                button5.content=textfields("O");
+                a5=0;
+             }
+            click++;
+         }
+         
+
+          click5++;
+          check();
+
+     });
+     
+    panel.addControl(button5);
+     //button5.addControl(button5);
+
+      //but6
+     
+     var button6 = new BABYLON.GUI.HolographicButton("button1");
+     //var button6=new BABYLON.GUI.TextBlock();
+    //  button6.text="6";
+     var click6=0;
+     button6.onPointerClickObservable.add(function(){
+         if(click6==0 && gameover==0)
+         {
+            if(click%2==1)
+             {
+                button6.content=textfields("X");
+                a6=1;
+             }
+             else
+             {
+                button6.content=textfields("O");
+                a6=0;
+             }
+             click++;
+         }
+          click6++;
+          check();
+
+     });
+    
+     panel.addControl(button6);
+    // button6.addControl(button6);
+
+       //but7
+     
+     var button7 = new BABYLON.GUI.HolographicButton("button1");
+     //var button7=new BABYLON.GUI.TextBlock();
+    //  button7.text="7";
+     var click7=0;
+     button7.onPointerClickObservable.add(function(){
+         if(click7==0 && gameover==0)
+         {
+            if(click%2==1)
+             {
+                button7.content=textfields("X");
+                a7=1;
+             }
+             else
+             {
+                button7.content=textfields("O");
+                a7=0;
+             }
+            click++;
+         }
+          click7++;
+          check();
+
+     });
+    
+    panel.addControl(button7);
+    // button7.addControl(button7);
+
+       //but8
+     
+     var button8 = new BABYLON.GUI.HolographicButton("button1");
+     //var button8=new BABYLON.GUI.TextBlock();
+    //  button8.text="8";
+     var click8=0;
+     button8.onPointerClickObservable.add(function(){
+         if(click8==0 && gameover==0)
+         {
+            if(click%2==1)
+             {
+                button8.content=textfields("X");
+                a8=1;
+             }
+             else
+             {
+                button8.content=textfields("O");
+                a8=0;
+             }
+            click++;
+         }
+          click8++;
+          check();
+
+     });
+    panel.addControl(button8);
+     //button8.addControl(button8);
+
+       //but9
+    
+     var button9 = new BABYLON.GUI.HolographicButton("button1");
+     //var button9=new BABYLON.GUI.TextBlock();
+    //  button9.text="9";
+     var click9=0;
+     button9.onPointerClickObservable.add(function(){
+         if(click9==0 && gameover==0)
+         {
+            if(click%2==1)
+             {
+                button9.content=textfields("X");
+                a9=1;
+             }
+             else
+             {
+                button9.content=textfields("O");
+                a9=0;
+             }
+            click++;
+         }
+          click9++;
+          check();
+     });
+     panel.addControl(button9);
+    
+
+     //start
+     
+    var start = Math.floor(BABYLON.Scalar.RandomRange(1,10));
+     starts(start);
+    // var start=3;
+    // starts(3);
+   function starts(start)
+   {
+        click++;
+        if(start == 1)
+        {
+            button1.content=textfields("X");
+            a1=1;
+            click1++;
+        }
+        else  if(start == 2)
+        {
+            button2.content=textfields("X");
+            a2=1;
+            click2++;
+        }
+        else  if(start == 3)
+        {
+            button3.content=textfields("X");
+            a3=1;
+            click3++;
+        }
+        else  if(start == 4)
+        {
+            button4.content=textfields("X");
+            a4=1;
+            click4++;
+        }
+        else  if(start == 5)
+        {
+            button5.content=textfields("X");
+            a5=1;
+            click5++;
+        }
+        else  if(start == 6)
+        {
+            button6.content=textfields("X");
+            a6=1;
+            click6++;
+        }
+        else  if(start == 7)
+        {
+            button7.content=textfields("X");
+            a7=1;
+            click7++;
+        }
+        else  if(start == 8)
+        {
+            button8.content=textfields("X");
+            a8=1;
+            click8++;
+        }
+        else  if(start == 9)
+        {
+            button9.content=textfields("X");
+            a9=1;
+            click9++;
+        }
+   }
+     //message display box
+    var rect10 = new BABYLON.GUI.Rectangle();
+    rect10.width="350px";
+    rect10.height="50px";
+    rect10.top="210px";
+    rect10.left="10px";
+    rect10.isVisible=false;
+     var textfield10=new BABYLON.GUI.TextBlock();
+     textfield10.text="";
+     advanceTexture.addControl(rect10);
+      rect10.addControl(textfield10);
+
+    //printx
+    function printx(value1,value2,value3,box1,box2,box3)
+    {
+        if(value1 == 9)
+            starts(box1);
+        else if(value2 == 9)
+            starts(box2);
+        else if(value3 == 9)
+            starts(box3);
+    }
+    //check
+     var check = function() {
+         var x1=a1+a2+a3;
+         var x2=a4+a5+a6;
+         var x3=a7+a8+a9;
+         var x4=a1+a4+a7;
+        var x5=a2+a5+a8;
+        var x6=a3+a6+a9;
+         var x7=a1+a5+a9;
+         var x8=a7+a5+a3;
+         if(x1==0 || x2==0  || x3==0 || x4==0 ||  x5==0 ||  x6==0 ||  x7==0 ||  x8==0)
+         {
+             gameover=1;
+             rect10.isVisible=true;
+             textfield10.text="YOU WIN";
+             menu();
+         }
+         else if(x1==3 || x2==3  || x3==3 || x4==3 ||  x5==3 ||  x6==3 ||  x7==3 ||  x8==3)
+         {
+             gameover=1;
+             rect10.isVisible=true;
+             textfield10.text="YOU LOSE";
+             menu();
+         }
+         else if(click == 10)
+         {
+            rect10.isVisible=true;
+             textfield10.text="DRAW";
+             menu();
+         }
+         if(click %2 ==1 && gameover == 0)
+         {
+
+            if(x1 == 11 )
+            {
+                printx(a1,a2,a3,1,2,3);
+            }
+            else if(x2 == 11 )
+            {
+                printx(a4,a5,a6,4,5,6);
+            }
+            else if(x3 == 11 )
+            {
+                printx(a7,a8,a9,7,8,9);
+            }
+            else if(x4 == 11)
+            {
+                printx(a1,a4,a7,1,4,7);
+            }
+            else if(x5 == 11 )
+            {
+                printx(a2,a5,a8,2,5,8);
+            }
+            else if(x6 == 11 )
+            {
+                printx(a3,a6,a9,3,6,9);
+            }
+            else if(x7 == 11 )
+            {
+                printx(a1,a5,a9,1,5,9);
+            }
+            else if(x8 == 11 )
+            {
+                printx(a3,a5,a7,3,5,7);
+            }
+            else if( x1 == 9)
+            {
+                printx(a1,a2,a3,1,2,3);
+            }
+            else if(x2 == 9)
+            {
+                printx(a4,a5,a6,4,5,6);
+            }
+            else if(x3 == 9)
+            {
+                printx(a7,a8,a9,7,8,9);
+            }
+            else if(x4 == 9)
+            {
+                printx(a1,a4,a7,1,4,7);
+            }
+            else if(x5== 9)
+            {
+                printx(a2,a5,a8,2,5,8);
+            }
+            else if(x6 == 9)
+            {
+                printx(a3,a6,a9,3,6,9);
+            }
+            else if(x7 == 9)
+            {
+                printx(a1,a5,a9,1,5,9);
+            }
+            else if(x8 == 9)
+            {
+                printx(a3,a5,a7,3,5,7);
+            }
+            else if(click == 9)
+            {
+                if(a1 == 9)
+                    starts(1);
+                else if(a2 == 9)
+                    starts(2);
+                else  if(a3 == 9)
+                    starts(3);
+                else  if(a4 == 9)
+                    starts(4);
+                else  if(a5 == 9)
+                    starts(5);
+                else  if(a6 == 9)
+                    starts(6);
+                else  if(a7 == 9)
+                    starts(7);
+                else  if(a8 == 9)
+                    starts(8);
+                else  if(a9 == 9)
+                    starts(9);
+            }
+            else if(x4==19 && x3==19 && a7==9)
+            {
+                starts(7);
+            }
+            else if(x1==19 && x6==19 && a3==9)
+            {
+                starts(3);
+            }
+            else if(x3==19 && x5==19 && a8==9)
+            {
+                starts(8);
+            }
+            else if(x1==19 && x5==19 && a2==9)
+            {
+                starts(2);
+            }
+            else if(x1==19 && x4==19 && a1==9)
+            {
+                starts(1);
+            }
+            else if(x3==9 && x6==19 && a9==9)
+            {
+                starts(9);
+            }
+            else if(x2==19 && x6==19 && a6==9)
+            {
+                starts(6);
+            }
+            else if(x2==19 && x4==19 && a4==9)
+            {
+                starts(4);
+            }
+            else if(a5 == 9)
+            {
+                starts(5);
+            }
+            else if(a1 == 9)
+            {
+                starts(1);
+            }
+            else if(a6 == 9)
+            {
+                starts(6);
+            }
+            else if(a2 == 9)
+            {
+                starts(2);
+            }
+            else if(a9==9)
+            {
+                starts(9);
+            }
+            else if(a8 ==9)
+            {
+                starts(8);
+            }
+            else if(a3 == 9)
+            {
+                starts(3);
+            }
+            else if(a4 == 9)
+            {
+                starts(4);
+            }
+            else if(a7 == 9)
+            {
+                starts(7);
+            }
+            check();
+         }
+
+         console.log(x1);
+          console.log(x2);
+           console.log(x3);
+         console.log(x4);
+          console.log(x5);
+         console.log(x6);
+         console.log(x7);
+          console.log(x8);
+          console.log("hi");
+     }
+    //  var manager1 = new BABYLON.GUI.GUI3DManager(scene);
+    //  var panel1 = new BABYLON.GUI.StackPanel3D();
+    // panel1.margin=0.03;
+    // panel1.isVertical = true;
+    // panel.isVisible=true;
+    // panel1.position.x=100;
+    // manager.addControl(panel1);
+    //  var newgame =  new BABYLON.GUI.HolographicButton("newgame");
+    //  newgame.content=textfields("New Game");
+    // newgame.onPointerClickObservable.add(function() {
+    //     engine.stopRenderLoop();
+    //     engine.runRenderLoop(function() {
+    //         scene.render();
+    //     })
+    // })
+    // panel1.addControl(newgame);
+    var rect1 = new BABYLON.GUI.Rectangle();
+    rect1.width="150px";
+    rect1.height="50px";
+    rect1.top="-50px";
+    rect1.left="284px";
+    rect1.isVisible=false;
+    advanceTexture.addControl(rect1);
+    var newgame = BABYLON.GUI.Button.CreateSimpleButton("newgame","New Game");
+    newgame.onPointerClickObservable.add(function() {
+    location.reload();
+    })
+    rect1.addControl(newgame);
+
+    var rect2 = new BABYLON.GUI.Rectangle();
+    rect2.width="150px";
+    rect2.height="50px";
+    rect2.top="40px";
+    rect2.left="284px";
+    rect2.isVisible=false;
+    advanceTexture.addControl(rect2);
+    var exit = BABYLON.GUI.Button.CreateSimpleButton("exit","Exit");
+    exit.onPointerClickObservable.add(function() {
+    window.close();
+    })
+    rect2.addControl(exit);
+    function menu()
+    {
+        rect1.isVisible=true;
+        rect2.isVisible=true;
+    }
+    return scene;
+
+};
+
+        engine = createDefaultEngine();
+        if (!engine) throw 'engine should not be null.';
+        scene = createScene();
+
+        engine.runRenderLoop(function () {
+            if (scene) {
+                scene.render();
+            }
+        });
+
+        // Resize
+        window.addEventListener("resize", function () {
+            engine.resize();
+        });
+    </script>
+</body>
+</html>
